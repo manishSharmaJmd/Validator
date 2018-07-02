@@ -33,3 +33,20 @@ onFocusChangeListener = Pass OnFocusChangeListener callback to get focus info.
 Setup 2 :- Check for success result Validator.isValidated()
 ```
 
+Advanced Usage :-
+
+Inject into Activity. It will pick all edittext automatically.
+
+```android
+Validator.injectActivity(Activity activity, final TextWatcher textWatcher, final View.OnFocusChangeListener onFocusChangeListener);
+ 
+```
+Inject into Fragment. It will pick all edittext automatically.
+
+```android
+Validator.injectFragment(Fragment fragment, final TextWatcher textWatcher, final View.OnFocusChangeListener onFocusChangeListener)
+  ```
+To change error style, Pass resource id like this :-
+```android
+Validator.setErrorResource(int resId)
+```
