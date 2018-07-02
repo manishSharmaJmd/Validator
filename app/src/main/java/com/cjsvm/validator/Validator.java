@@ -103,180 +103,182 @@ public class Validator {
     }
 
     public static void injectActivity(Activity activity, final TextWatcher textWatcher, final View.OnFocusChangeListener onFocusChangeListener) {
+        if (activity != null) {
+            ArrayList<EditText> editAr = new ArrayList<>();
+            final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) activity
+                    .findViewById(android.R.id.content)).getChildAt(0);
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
 
-        ArrayList<EditText> editAr = new ArrayList<>();
-        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) activity
-                .findViewById(android.R.id.content)).getChildAt(0);
-        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                if (viewGroup.getChildAt(i) instanceof EditText) {
+                    final EditText editText = (EditText) viewGroup.getChildAt(i);
 
-            if (viewGroup.getChildAt(i) instanceof EditText) {
-                final EditText editText = (EditText) viewGroup.getChildAt(i);
+                    editAr.add(editText);
 
-                editAr.add(editText);
+                    final Drawable background = editText.getBackground();
+                    editText.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                final Drawable background = editText.getBackground();
-                editText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                        if (textWatcher != null) {
-                            textWatcher.beforeTextChanged(charSequence, i, i1, i2);
-                        }
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        if (textWatcher != null) {
-                            textWatcher.onTextChanged(charSequence, i, i1, i2);
-                        }
-                        if (TextUtils.isEmpty(charSequence.toString())) {
-                            editText.setBackgroundResource(resourceId);
-                        } else {
-
-                            if (background != null) {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                    editText.setBackground(background);
-                                } else {
-                                    editText.setBackgroundDrawable(background);
-
-                                }
-                            } else {
-                                editText.setBackgroundResource(0);
+                            if (textWatcher != null) {
+                                textWatcher.beforeTextChanged(charSequence, i, i1, i2);
                             }
                         }
 
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                        if (textWatcher != null) {
-                            textWatcher.afterTextChanged(editable);
-                        }
-                    }
-                });
-                editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View view, boolean b) {
-                        if (onFocusChangeListener != null)
-                            onFocusChangeListener.onFocusChange(view, b);
-
-                        if (!b) {
-                            if (TextUtils.isEmpty(editText.getText().toString())) {
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            if (textWatcher != null) {
+                                textWatcher.onTextChanged(charSequence, i, i1, i2);
+                            }
+                            if (TextUtils.isEmpty(charSequence.toString())) {
                                 editText.setBackgroundResource(resourceId);
-                            }
-                        } else {
-                            if (background != null) {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                    editText.setBackground(background);
-                                } else {
-                                    editText.setBackgroundDrawable(background);
-
-                                }
                             } else {
-                                editText.setBackgroundResource(0);
+
+                                if (background != null) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                        editText.setBackground(background);
+                                    } else {
+                                        editText.setBackgroundDrawable(background);
+
+                                    }
+                                } else {
+                                    editText.setBackgroundResource(0);
+                                }
+                            }
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+                            if (textWatcher != null) {
+                                textWatcher.afterTextChanged(editable);
                             }
                         }
-                    }
-                });
+                    });
+                    editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View view, boolean b) {
+                            if (onFocusChangeListener != null)
+                                onFocusChangeListener.onFocusChange(view, b);
+
+                            if (!b) {
+                                if (TextUtils.isEmpty(editText.getText().toString())) {
+                                    editText.setBackgroundResource(resourceId);
+                                }
+                            } else {
+                                if (background != null) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                        editText.setBackground(background);
+                                    } else {
+                                        editText.setBackgroundDrawable(background);
+
+                                    }
+                                } else {
+                                    editText.setBackgroundResource(0);
+                                }
+                            }
+                        }
+                    });
+
+
+                }
 
 
             }
-
-
+            if (editAr.size() != 0)
+                editTextsAr = new EditText[editAr.size()];
+            for (int i = 0; i < editAr.size(); i++)
+                editTextsAr[i] = editAr.get(i);
         }
-        if (editAr.size() != 0)
-            editTextsAr = new EditText[editAr.size()];
-        for (int i = 0; i < editAr.size(); i++)
-            editTextsAr[i] = editAr.get(i);
 
     }
 
     public static void injectFragment(Fragment fragment, final TextWatcher textWatcher, final View.OnFocusChangeListener onFocusChangeListener) {
 
-        ArrayList<EditText> editAr = new ArrayList<>();
-        final ViewGroup viewGroup = (ViewGroup) fragment.getView();
-        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+        if (fragment != null) {
+            ArrayList<EditText> editAr = new ArrayList<>();
+            final ViewGroup viewGroup = (ViewGroup) fragment.getView();
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
 
-            if (viewGroup.getChildAt(i) instanceof EditText) {
-                final EditText editText = (EditText) viewGroup.getChildAt(i);
+                if (viewGroup.getChildAt(i) instanceof EditText) {
+                    final EditText editText = (EditText) viewGroup.getChildAt(i);
 
-                editAr.add(editText);
+                    editAr.add(editText);
 
-                final Drawable background = editText.getBackground();
-                editText.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    final Drawable background = editText.getBackground();
+                    editText.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                        if (textWatcher != null) {
-                            textWatcher.beforeTextChanged(charSequence, i, i1, i2);
-                        }
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                        if (textWatcher != null) {
-                            textWatcher.onTextChanged(charSequence, i, i1, i2);
-                        }
-                        if (TextUtils.isEmpty(charSequence.toString())) {
-                            editText.setBackgroundResource(resourceId);
-                        } else {
-
-                            if (background != null) {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                    editText.setBackground(background);
-                                } else {
-                                    editText.setBackgroundDrawable(background);
-
-                                }
-                            } else {
-                                editText.setBackgroundResource(0);
+                            if (textWatcher != null) {
+                                textWatcher.beforeTextChanged(charSequence, i, i1, i2);
                             }
                         }
 
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable editable) {
-                        if (textWatcher != null) {
-                            textWatcher.afterTextChanged(editable);
-                        }
-                    }
-                });
-                editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View view, boolean b) {
-                        if (onFocusChangeListener != null)
-                            onFocusChangeListener.onFocusChange(view, b);
-
-                        if (!b) {
-                            if (TextUtils.isEmpty(editText.getText().toString())) {
+                        @Override
+                        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                            if (textWatcher != null) {
+                                textWatcher.onTextChanged(charSequence, i, i1, i2);
+                            }
+                            if (TextUtils.isEmpty(charSequence.toString())) {
                                 editText.setBackgroundResource(resourceId);
-                            }
-                        } else {
-                            if (background != null) {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                                    editText.setBackground(background);
-                                } else {
-                                    editText.setBackgroundDrawable(background);
-
-                                }
                             } else {
-                                editText.setBackgroundResource(0);
+
+                                if (background != null) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                        editText.setBackground(background);
+                                    } else {
+                                        editText.setBackgroundDrawable(background);
+
+                                    }
+                                } else {
+                                    editText.setBackgroundResource(0);
+                                }
+                            }
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable editable) {
+                            if (textWatcher != null) {
+                                textWatcher.afterTextChanged(editable);
                             }
                         }
-                    }
-                });
+                    });
+                    editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View view, boolean b) {
+                            if (onFocusChangeListener != null)
+                                onFocusChangeListener.onFocusChange(view, b);
+
+                            if (!b) {
+                                if (TextUtils.isEmpty(editText.getText().toString())) {
+                                    editText.setBackgroundResource(resourceId);
+                                }
+                            } else {
+                                if (background != null) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                        editText.setBackground(background);
+                                    } else {
+                                        editText.setBackgroundDrawable(background);
+
+                                    }
+                                } else {
+                                    editText.setBackgroundResource(0);
+                                }
+                            }
+                        }
+                    });
+
+
+                }
 
 
             }
-
-
+            if (editAr.size() != 0)
+                editTextsAr = new EditText[editAr.size()];
+            for (int i = 0; i < editAr.size(); i++)
+                editTextsAr[i] = editAr.get(i);
         }
-        if (editAr.size() != 0)
-            editTextsAr = new EditText[editAr.size()];
-        for (int i = 0; i < editAr.size(); i++)
-            editTextsAr[i] = editAr.get(i);
-
 
     }
 
