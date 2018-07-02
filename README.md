@@ -51,11 +51,14 @@ Inject into Fragment. It will pick all edittext automatically.
 ```android
 Validator.injectFragment(Fragment fragment,  TextWatcher textWatcher,  View.OnFocusChangeListener onFocusChangeListener)
   ```
-To change error style, Pass resource id like this :-
-```android
-Validator.setErrorResource(int resId)
-```
+
 Setup 2 :-
 ```android
 Check for success result Validator.isValidated()
 ```
+To change error style, Pass resource id like this :-
+```android
+Validator.setErrorResource(int resId)
+```
+
+Enjoy!
