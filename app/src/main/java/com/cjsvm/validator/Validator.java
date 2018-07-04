@@ -19,6 +19,8 @@ public class Validator {
 
     private static EditText[] editTextsAr;
     private static int resourceId = R.drawable.error_style;
+    private static ArrayList<EditText> editAr = new ArrayList<>();
+
 
     public static void setErrorResource(int resId) {
         resourceId = resId;
@@ -105,15 +107,21 @@ public class Validator {
     public static void injectActivity(Activity activity, final TextWatcher textWatcher, final View.OnFocusChangeListener onFocusChangeListener) {
         if (activity != null) {
             ArrayList<EditText> editAr = new ArrayList<>();
-            final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) activity
+            ViewGroup viewGroup = (ViewGroup) ((ViewGroup) activity
                     .findViewById(android.R.id.content)).getChildAt(0);
-            for (int i = 0; i < viewGroup.getChildCount(); i++) {
 
-                if (viewGroup.getChildAt(i) instanceof EditText) {
-                    final EditText editText = (EditText) viewGroup.getChildAt(i);
 
-                    editAr.add(editText);
+            editAr.clear();
+            editAr = getAllEditTexts(viewGroup);
 
+            if (editAr.size() != 0) {
+                editTextsAr = new EditText[editAr.size()];
+                for (int i = 0; i < editAr.size(); i++)
+                    editTextsAr[i] = editAr.get(i);
+
+                for (int i = 0; i < editTextsAr.length; i++) {
+
+                    final EditText editText = editTextsAr[i];
                     final Drawable background = editText.getBackground();
                     editText.addTextChangedListener(new TextWatcher() {
                         @Override
@@ -181,13 +189,9 @@ public class Validator {
 
 
                 }
-
-
             }
-            if (editAr.size() != 0)
-                editTextsAr = new EditText[editAr.size()];
-            for (int i = 0; i < editAr.size(); i++)
-                editTextsAr[i] = editAr.get(i);
+
+
         }
 
     }
@@ -197,13 +201,18 @@ public class Validator {
         if (fragment != null) {
             ArrayList<EditText> editAr = new ArrayList<>();
             final ViewGroup viewGroup = (ViewGroup) fragment.getView();
-            for (int i = 0; i < viewGroup.getChildCount(); i++) {
 
-                if (viewGroup.getChildAt(i) instanceof EditText) {
-                    final EditText editText = (EditText) viewGroup.getChildAt(i);
+            editAr.clear();
+            editAr = getAllEditTexts(viewGroup);
 
-                    editAr.add(editText);
+            if (editAr.size() != 0) {
+                editTextsAr = new EditText[editAr.size()];
+                for (int i = 0; i < editAr.size(); i++)
+                    editTextsAr[i] = editAr.get(i);
 
+                for (int i = 0; i < editTextsAr.length; i++) {
+
+                    final EditText editText = editTextsAr[i];
                     final Drawable background = editText.getBackground();
                     editText.addTextChangedListener(new TextWatcher() {
                         @Override
@@ -271,13 +280,9 @@ public class Validator {
 
 
                 }
-
-
             }
-            if (editAr.size() != 0)
-                editTextsAr = new EditText[editAr.size()];
-            for (int i = 0; i < editAr.size(); i++)
-                editTextsAr[i] = editAr.get(i);
+
+
         }
 
     }
@@ -313,6 +318,20 @@ public class Validator {
 
 
         return result;
+    }
+
+
+    private static ArrayList<EditText> getAllEditTexts(ViewGroup root) {
+        ArrayList<EditText> views = new ArrayList<>();
+        for (int i = 0; i < root.getChildCount(); i++) {
+            View v = root.getChildAt(i);
+            if (v instanceof EditText) {
+                views.add((EditText) v);
+            } else if (v instanceof ViewGroup) {
+                views.addAll(getAllEditTexts((ViewGroup) v));
+            }
+        }
+        return views;
     }
 
     private static TranslateAnimation shakeError() {

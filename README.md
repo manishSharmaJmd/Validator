@@ -16,7 +16,7 @@ allprojects {
  
 ```
 dependencies {
-	        implementation 'com.github.manishSharmaJmd:Validator:1.4'
+	        implementation 'com.github.manishSharmaJmd:Validator:1.5'
 	     }
 ```
 
